@@ -1,7 +1,7 @@
 ===========
 whatsmyrank
 ===========
-Questionaire software
+Office table tennis tournament ranking system. Result of http://bit.ly/pyws-1
 
 * Free software: BSD license
 
