@@ -1,0 +1,7 @@
+*.pyc
+
+.cache
+.floo
+.flooignore
+.xprocess
+__pycache__
