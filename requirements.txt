@@ -1,0 +1,9 @@
+ipython
+
+pytest
+pytest-xprocess
+splinter
+
+# Install package requirements.
+# See: https://caremad.io/2013/07/setup-vs-requirement/
+-e .
