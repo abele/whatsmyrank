@@ -10,7 +10,7 @@ from splinter.browser import Browser
 @pytest.fixture(scope='session')
 def test_server(xprocess, request):
     def preparefunc(cwd):
-        server_mod = py.path.local('web.py')
+        server_mod = py.path.local('src/whatsmyrank/web.py')
         return ('started', [sys.executable, server_mod])
 
     pid, log = xprocess.ensure('server', preparefunc)
