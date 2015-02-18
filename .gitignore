@@ -6,3 +6,5 @@
 .flooignore
 .xprocess
 __pycache__
+
+score_set
