@@ -1,3 +1,17 @@
+def test_shows_player_rating(browser, test_server):
+    app = ScoringApp(browser, test_server)
+    app.visit('/')
+    app.shows('P1 1000')
+
+
+def test_user_adding(browser, test_server):
+    app = ScoringApp(browser, test_server)
+    app.visit('/players')
+    app.add_player('test')
+    app.is_in_page('/players/test')
+    app.shows('test')
+
+
 class ScoringApp(object):
     def __init__(self, browser, get_url):
         self._browser = browser
@@ -13,16 +27,3 @@ class ScoringApp(object):
         self._browser.fill('player-name', name)
         self._browser.find_by_id('submit').click()
 
-
-def test_shows_player_rating(browser, test_server):
-    app = ScoringApp(browser, test_server)
-    app.visit('/')
-    app.shows('P1 1000')
-
-
-def test_user_adding(browser, test_server):
-    app = ScoringApp(browser, test_server)
-    app.visit('/players')
-    app.add_player('test')
-    app.is_in_page('/players/test')
-    app.shows('test')
