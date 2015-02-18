@@ -9,7 +9,7 @@ def test_user_adding(browser, test_server):
     app.visit('/players')
     app.add_player('test')
     app.is_in_page('/players/test')
-    app.shows('test')
+    app.shows('TEST 1000')
 
 
 class ScoringApp(object):
@@ -27,3 +27,5 @@ class ScoringApp(object):
         self._browser.fill('player-name', name)
         self._browser.find_by_id('submit').click()
 
+    def is_in_page(self, url):
+        assert self._browser.url == self._get_url(url)
