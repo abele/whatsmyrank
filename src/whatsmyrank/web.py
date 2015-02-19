@@ -42,6 +42,15 @@ def create_player(request):
     raise exc.HTTPFound('/players/test')
 
 
+def view_player(request):
+    name = request.matchdict['player']
+
+    with shelve.open(DB_NAME) as db:
+        player_score = name.upper() + ' ' + str(db[name])
+
+    return Response(player_score)
+
+
 config = Configurator()
 config.add_route('home', '/')
 config.add_view(home, route_name='home')
@@ -49,6 +58,9 @@ config.add_view(home, route_name='home')
 config.add_route('players', '/players')
 config.add_view(players, route_name='players', request_method='GET')
 config.add_view(create_player, route_name='players', request_method='POST')
+
+config.add_route('player', '/players/{player}')
+config.add_view(view_player, route_name='player')
 
 app = config.make_wsgi_app()
 
