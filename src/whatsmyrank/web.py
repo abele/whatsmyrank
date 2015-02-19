@@ -39,7 +39,7 @@ def create_player(request):
     with shelve.open(DB_NAME) as db:
         db[name] = 1000
 
-    raise exc.HTTPFound('/players/test')
+    raise exc.HTTPFound(request.route_url('player', player=name))
 
 
 def view_player(request):
