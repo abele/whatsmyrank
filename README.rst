@@ -15,6 +15,9 @@ Installation
 
 Development
 ===========
+To setup all dependencies::
+
+    pip install -r requirements.txt
 
 To run the all tests run::
 
