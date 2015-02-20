@@ -29,8 +29,8 @@ def to_single_score(score1, score2):
     else:
         score = 0
 
-    # return  score + float(score1) / float(score1 + score2)
-    return 1 if score1 > score2 else 0
+    return  score + float(score1) / float(score1 + score2)
+    # return 1 if score1 > score2 else 0
 
 for i in scoredb.index:
     scoredb.ix[i, 'Score'] = to_single_score(
@@ -120,6 +120,7 @@ def game(p1,p2,score,ind,verbose):
     p2.update(p2.rank-deltarank2,ind,1-escore)
 
     if verbose :
+        print("-" * 80)
         print("Game number: ", ind)
         print("The game is on!")
         print("Inputs are given:"
