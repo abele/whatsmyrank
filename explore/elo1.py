@@ -19,10 +19,8 @@ sampledb = pd.DataFrame(columns=('Team1','Team2','Score'))
 playerList = []
 ### read external scores file. file format: csv: Team1,Team2,Score. Score:1 or 0 for Team1
 scoredb = pd.read_csv('scores.csv')
-print scoredb.head()
-print "Some scores read! Length of score file: ", len(scoredb.index)
-print ""
-
+print(scoredb.head())
+print("Some scores read! Length of score file: {}".format(len(scoredb.index)))
 
 # Trying to adjust two score system to one score. Currently without any success
 def to_single_score(score1, score2):
@@ -101,9 +99,9 @@ def logcdf(x,mu,sigma):
 # Update unique players from scorefile. scoredb DataFrame as input:
 def updateUnique(db):
     global playerList
-    print "db type read: ", type(db)
+    print("db type read: ", type(db))
     playerList =  sorted(np.unique(db[['Team1','Team2']]).tolist())
-    print "unique players: ",playerList
+    print("unique players: ", playerList)
 
 
 #Returns epxected score of player one as a function 2 ranks.:
@@ -120,18 +118,30 @@ def game(p1,p2,score,ind,verbose):
     deltarank2 = (score-escore)*KfactorBase*p2.KfactorCoef
     p1.update(p1.rank+deltarank1,ind,escore)
     p2.update(p2.rank-deltarank2,ind,1-escore)
+
     if verbose :
-        print ""
-        print "Game number: ", ind, " The game is on! Inputs are given: team1,team2,score: ", p1.name,p2.name,score
-        print "rank difference", p1.name, " - ",p2.name," = ", (p1.rank - p2.rank), "expected probability of ", p1.name, " winning: ",round(escore,5)
-        print "actual score for ", p1.name," is ", score, "Games played by ", p1.name, p1.gamesPlayed, " games played by ", p2.name, p2.gamesPlayed
-        print "rank update with Kfactor base", KfactorBase, " and KfactorCoef ", p1.KfactorCoef, " for ", p1.name, "is", deltarank1, ", for ", p2.name, " with KfactorCoef of ", p2.KfactorCoef," is ", -deltarank2, "new rank of ", p1.name, " is ", p1.rank, ", of ", p2.name, " ", p2.rank
+        print("Game number: ", ind)
+        print("The game is on!")
+        print("Inputs are given:"
+              " team1={} ,team2={} ,score={}: ".format(p1.name, p2.name, score))
+
+        print("Rank difference", p1.name, " - ",p2.name," = ", (p1.rank -
+            p2.rank))
+        print("Expected probability of ", p1.name, " winning: ", round(escore, 5))
+        print("Actual score for ", p1.name," is ", score)
+        print("Games played by ", p1.name, p1.gamesPlayed)
+        print("Games played by ", p2.name, p2.gamesPlayed)
+        print("Rank update with Kfactor base", KfactorBase, " and KfactorCoef ",
+                p1.KfactorCoef, " for ", p1.name, "is", deltarank1, ", for ",
+                p2.name, " with KfactorCoef of ", p2.KfactorCoef," is ",
+                -deltarank2, "new rank of ", p1.name, " is ", p1.rank, ", of ",
+                p2.name, " ", p2.rank)
 
 
 # Create player objects from players class. Names from playerList function. Namespace for addressing players pl['name'] pl=PL:
 def createPlayers(playerListLocal):
     for name in playerListLocal:
-        print "creating player ", name
+        print("creating player ", name)
         pl[name] = player(name)
 
 
@@ -149,20 +159,21 @@ def updateScores(db, verbose):
 
 # Draw dynamics of player ELO score:
 def drawRankDynamics():
-#    colors=('red','blue','green','pink')
-#    c=0
     for zz in playerList:
         plt.plot(pl[zz].stats['GameNumber'],pl[zz].stats['Rank'],label=pl[zz].name)
-#        c = c+1
+
     plt.xlabel('Spelu skaits')
     plt.ylabel('Elo skoors')
     plt.title('Ranking dynamics.CDFSigma: '+str(CDFSigma)+', Kfactor: '+str(KfactorBase))
     plt.grid()
     plt.legend()
     plt.show()
+
+
 # Misceallaneous analytics:
 def analytics():
-    print "----- Some analytics below ----"
+    print("----- Some analytics below ----")
+
     avgscore = 0.0
     for zz in pl:
         avgscore= avgscore + pl[zz].rank
@@ -171,9 +182,9 @@ def analytics():
 #    print "Current ranks are:"
 #    for key in sorted(list(pl.keys())):
 #        print pl[key].name, " : ", pl[key].rank
-    print "Average Pwin: ",pl['a'].stats.mean(axis=0)[2]
-    print "Stdev of Pwin: ", pl['a'].stats.std(0)[2]
-    print "STDev/avg: ",pl['a'].stats.std(0)[2]/pl['a'].stats.mean(axis=0)[2]
+    print("Average Pwin: ",pl['a'].stats.mean(axis=0)[2])
+    print("Stdev of Pwin: ", pl['a'].stats.std(0)[2])
+    print("STDev/avg: ",pl['a'].stats.std(0)[2]/pl['a'].stats.mean(axis=0)[2])
 
 
 # Print latest ELO scores and rank:
@@ -184,7 +195,7 @@ def latestRanking():
         ranks.set_value(name,'GamesPlayed',pl[name].gamesPlayed)
     ranks.sort(['CurrentElo'], ascending=False,inplace=True)
     ranks['CurrentRank'] = range(1,len(ranks)+1,1)
-    print ranks
+    print(ranks)
 
 
 # Table for people to understand what they might gain or loose by playing a particular opponent:
@@ -196,9 +207,10 @@ def latestMutualGains():
             deltarank1 = (1-expectedScore(pl[a].rank,pl[a].rank))*KfactorBase*pl[a].KfactorCoef
             displayTable[b][a]= str(round(deltarank2,0))+"|"+ str(round(-deltarank1,0))
 
-    print "Table describes current potential Gains & Losses from next game"
-    print "Read dis by rows. [X | Y] - X=points gained when row player wins, Y= points lost when col player loses"
-    print displayTable
+    print("Table describes current potential Gains & Losses from next game")
+    print("Read dis by rows. [X | Y] - X=points gained when row player wins, "
+           " Y=points lost when col player loses")
+    print(displayTable)
 
 #Make sample games DataFrame called scoredb:
 def makeSampleGames(numPlayers,numGames):
@@ -207,8 +219,9 @@ def makeSampleGames(numPlayers,numGames):
     samplePlayers = playerNamesList[0:numPlayers]
     for n in samplePlayers.index:
         samplePlayers[n] = np.random.random()
-    print "Sample players created with following skill levels"
-    print samplePlayers
+    print("Sample players created with following skill levels")
+    print(samplePlayers)
+
     for i in range(numGames):
         Team1=list(samplePlayers.index)[int(np.random.random()*numPlayers)]  # select team1
         Team2= Team1
@@ -222,7 +235,7 @@ def makeSampleGames(numPlayers,numGames):
         sampledb.set_value(i,'Team1',Team1)
         sampledb.set_value(i,'Team2',Team2)
         sampledb.set_value(i,'Score',score)
-    print "SampleDB created:"
+    print("SampleDB created:", sampledb)
 
 
 def run(db,verbose):
