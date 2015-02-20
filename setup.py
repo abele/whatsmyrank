@@ -44,5 +44,6 @@ setup(
     ],
     install_requires=[
         'pyramid==1.5.2',
+        'py==1.4.26',
     ],
 )
