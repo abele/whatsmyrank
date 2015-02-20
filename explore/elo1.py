@@ -30,7 +30,7 @@ def to_single_score(score1, score2):
         score = 0
 
     return  score + float(score1) / float(score1 + score2)
-    # return 1 if score1 > score2 else 0
+
 
 for i in scoredb.index:
     scoredb.ix[i, 'Score'] = to_single_score(
@@ -152,7 +152,7 @@ def updateScores(db, verbose):
         game(
             pl[db.iloc[i][0]],
             pl[db.iloc[i][1]],
-            db.iloc[i][2],
+            db.iloc[i].Score,
             i,
             verbose,
         )
