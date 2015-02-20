@@ -150,8 +150,8 @@ def createPlayers(playerListLocal):
 def updateScores(db, verbose):
     for i in db.index:
         game(
-            pl[db.iloc[i][0]],
-            pl[db.iloc[i][1]],
+            pl[db.iloc[i].Team1],
+            pl[db.iloc[i].Team2],
             db.iloc[i].Score,
             i,
             verbose,
