@@ -5,6 +5,10 @@ pytest
 pytest-xprocess
 splinter
 
+# For exploration
+matplotlib
+pandas
+
 # Install package requirements.
 # See: https://caremad.io/2013/07/setup-vs-requirement/
 -e .
