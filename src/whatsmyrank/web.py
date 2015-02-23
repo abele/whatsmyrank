@@ -1,21 +1,25 @@
 import shelve
+import os
 import sys
 from wsgiref.simple_server import make_server
 
 import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
 from pyramid.response import Response
+import logging
 
-DB_NAME = 'score_set'
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
+DATABASE_URL = os.environ['QUEST_DATABASE_URL']
 
-with shelve.open(DB_NAME) as db:
+with shelve.open(DATABASE_URL) as db:
     db['p1'] = 1000
     db['p2'] = 2000
 
 
 def home(request):
-    with shelve.open(DB_NAME) as db:
+    with shelve.open(DATABASE_URL) as db:
         for key in db:
             p1_score = key.upper() + " " + str(db[key])
 
@@ -36,7 +40,7 @@ def players(request):
 def create_player(request):
     name = request.POST['player-name']
 
-    with shelve.open(DB_NAME) as db:
+    with shelve.open(DATABASE_URL) as db:
         db[name] = 1000
 
     raise exc.HTTPFound(request.route_url('player', player=name))
@@ -45,7 +49,7 @@ def create_player(request):
 def view_player(request):
     name = request.matchdict['player']
 
-    with shelve.open(DB_NAME) as db:
+    with shelve.open(DATABASE_URL) as db:
         player_score = name.upper() + ' ' + str(db[name])
 
     return Response(player_score)
@@ -66,6 +70,9 @@ app = config.make_wsgi_app()
 
 
 if __name__ == '__main__':
+    logger.info('ENVIRONMENT=%s',
+                {key: os.environ[key] for key in os.environ
+                 if key.startswith('QUEST_')})
     sys.stderr.write("started\n")
     sys.stderr.flush()
 
