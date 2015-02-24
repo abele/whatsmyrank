@@ -29,7 +29,7 @@ def to_single_score(score1, score2):
     else:
         score = 0
 
-    return  score + float(score1) / float(score1 + score2)
+    return  score + (float(score1) / float(score1 + score2)) * 0.5
 
 
 for i in scoredb.index:
