@@ -13,17 +13,40 @@ logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.environ['QUEST_DATABASE_URL']
 
-with shelve.open(DATABASE_URL) as db:
-    db['p1'] = 1000
-    db['p2'] = 2000
+
+class PlayerRepository(object):
+    def __init__(self, database_url):
+        self._url = database_url
+
+        with shelve.open(self._url) as db:
+            db['p1'] = 1000
+            db['p2'] = 2000
+
+    def scores(self):
+        with shelve.open(self._url) as db:
+            _scores = [key.upper() + ' ' + str(db[key]) + '\n'
+                       for key in db]
+
+        return _scores
+
+    def create(self, name):
+        with shelve.open(self._url) as db:
+            db[name] = 1000
+
+    def score(self, name):
+        with shelve.open(DATABASE_URL) as db:
+            player_score = name.upper() + ' ' + str(db[name])
+
+        return player_score
+
+
+
+player_repo = PlayerRepository(DATABASE_URL)
 
 
 def home(request):
-    with shelve.open(DATABASE_URL) as db:
-        for key in db:
-            p1_score = key.upper() + " " + str(db[key])
-
-    return Response(str(p1_score))
+    score_list = player_repo.scores()
+    return Response(str(score_list))
 
 
 def players(request):
@@ -39,19 +62,13 @@ def players(request):
 
 def create_player(request):
     name = request.POST['player-name']
-
-    with shelve.open(DATABASE_URL) as db:
-        db[name] = 1000
-
+    player_repo.create(name)
     raise exc.HTTPFound(request.route_url('player', player=name))
 
 
 def view_player(request):
     name = request.matchdict['player']
-
-    with shelve.open(DATABASE_URL) as db:
-        player_score = name.upper() + ' ' + str(db[name])
-
+    player_score = player_repo.score(name)
     return Response(player_score)
 
 
