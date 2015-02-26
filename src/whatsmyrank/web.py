@@ -62,7 +62,7 @@ app = config.make_wsgi_app()
 if __name__ == '__main__':
     logger.info('ENVIRONMENT=%s',
                 {key: os.environ[key] for key in os.environ
-                 if key.startswith('QUEST_')})
+                 if key.startswith('RANK_')})
     sys.stderr.write("started\n")
     sys.stderr.flush()
 
