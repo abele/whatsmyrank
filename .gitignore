@@ -12,3 +12,4 @@ score_set
 *.shelve
 
 wheelhouse/
+env/
