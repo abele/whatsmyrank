@@ -23,7 +23,7 @@ def database_url():
 def test_server(xprocess, request, database_url):
     def preparefunc(cwd):
         server_mod = py.path.local('src/whatsmyrank/web.py')
-        os.environ['QUEST_DATABASE_URL'] = database_url
+        os.environ['RANK_DATABASE_URL'] = database_url
         return ('started', [sys.executable, server_mod, ])
 
     pid, log = xprocess.ensure('server', preparefunc)

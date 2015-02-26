@@ -12,7 +12,7 @@ from whatsmyrank.players import PlayerRepository, START_RANK
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = os.environ['QUEST_DATABASE_URL']
+DATABASE_URL = os.environ['RANK_DATABASE_URL']
 
 player_repo = PlayerRepository(DATABASE_URL, START_RANK)
 
