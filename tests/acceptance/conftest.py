@@ -1,10 +1,18 @@
-import sys
 import os
+import shelve
 import signal
+import sys
 
 import py
 import pytest
 from splinter.browser import Browser
+
+
+@pytest.fixture(scope='function', autouse=True)
+def clear_database(database_url):
+    with shelve.open(database_url) as db:
+        db.clear()
+
 
 @pytest.fixture(scope='session')
 def database_url():
@@ -36,4 +44,3 @@ def browser(request):
     b = Browser('chrome')
     request.addfinalizer(b.quit)
     return b
-

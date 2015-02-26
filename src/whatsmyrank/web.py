@@ -1,26 +1,21 @@
-import shelve
+import logging
 import os
+import shelve
 import sys
 from wsgiref.simple_server import make_server
 
 import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
 from pyramid.response import Response
-import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.environ['QUEST_DATABASE_URL']
 
-
 class PlayerRepository(object):
     def __init__(self, database_url):
         self._url = database_url
-
-        with shelve.open(self._url) as db:
-            db['p1'] = 1000
-            db['p2'] = 2000
 
     def scores(self):
         with shelve.open(self._url) as db:

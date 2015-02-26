@@ -1,4 +1,11 @@
-def test_shows_player_rating(browser, test_server):
+import shelve
+
+
+def test_shows_player_rating(browser, test_server, database_url):
+    with shelve.open(database_url) as db:
+        db.clear()
+        db['p1'] = 1000
+
     app = ScoringApp(browser, test_server)
     app.visit('/')
     app.shows('P1 1000')
