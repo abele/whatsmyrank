@@ -1,10 +1,12 @@
 import shelve
 
+from whatsmyrank.players import START_RANK
+from whatsmyrank.players import PlayerRepository
+
 
 def test_shows_player_rating(browser, test_server, database_url):
-    with shelve.open(database_url) as db:
-        db.clear()
-        db['p1'] = 1000
+    player_repo = PlayerRepository(database_url, START_RANK)
+    player_repo.create('p1')
 
     app = ScoringApp(browser, test_server)
     app.visit('/')
