@@ -1,24 +1,39 @@
 import shelve
 
+import pytest
+
 from whatsmyrank.players import START_RANK
 from whatsmyrank.players import PlayerRepository
 
 
-def test_shows_player_rating(browser, test_server, database_url):
+@pytest.fixture
+def app(browser, test_server):
+    return ScoringApp(browser, test_server)
+
+
+def test_shows_player_rating(app, database_url):
     player_repo = PlayerRepository(database_url, START_RANK)
     player_repo.create('p1')
 
-    app = ScoringApp(browser, test_server)
     app.visit('/')
     app.shows('P1 1000')
 
 
-def test_user_adding(browser, test_server):
-    app = ScoringApp(browser, test_server)
+def test_user_adding(app):
     app.visit('/players')
     app.add_player('test')
     app.is_in_page('/players/test')
     app.shows('TEST 1000')
+
+
+def test_can_add_game_scores(app):
+    app.visit('/players')
+    app.add_player('p1')
+
+    app.visit('/games')
+    app.enter_games('P1', 'P2', '11/2 11/3 11/8')
+    app.visit('/players/p1')
+    app.shows('P1 1003')
 
 
 class ScoringApp(object):
@@ -38,3 +53,9 @@ class ScoringApp(object):
 
     def is_in_page(self, url):
         assert self._browser.url == self._get_url(url)
+
+    def enter_games(self, p1, p2, game_seq_str):
+        self._browser.fill('player1', p1)
+        self._browser.fill('player2', p2)
+        self._browser.fill('games', game_seq_str)
+        self._browser.find_by_id('submit').click()

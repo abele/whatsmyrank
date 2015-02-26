@@ -45,6 +45,26 @@ def view_player(request):
     return Response(player_score)
 
 
+def games(request):
+    content = """
+    <form action="" method="POST">
+        <input id="player1" type="text" name="player1">
+        <input id="player2" type="text" name="player2">
+        <input id="games" type="text" name="games">
+        <input id="submit" type="submit" value="Submit">
+    </form>
+    """
+
+    return Response(content)
+
+
+def add_games(request):
+    player1 = request.POST['player1']
+    player2 = request.POST['player2']
+    games = request.POST['games']
+    return Response('DONE')
+
+
 config = Configurator()
 config.add_route('home', '/')
 config.add_view(home, route_name='home')
@@ -55,6 +75,11 @@ config.add_view(create_player, route_name='players', request_method='POST')
 
 config.add_route('player', '/players/{player}')
 config.add_view(view_player, route_name='player')
+
+config.add_route('games', '/games')
+config.add_view(games, route_name='games', request_method='GET')
+config.add_view(add_games, route_name='games', request_method='POST')
+
 
 app = config.make_wsgi_app()
 
