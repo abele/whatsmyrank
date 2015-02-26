@@ -1,3 +1,5 @@
+envdir
+
 ipython
 isort
 
