@@ -2,9 +2,13 @@ import os
 import shelve
 
 
+START_RANK = 1000
+
+
 class PlayerRepository(object):
-    def __init__(self, database_url):
+    def __init__(self, database_url, start_rank):
         self._url = database_url
+        self._start_rank = start_rank
 
     def scores(self):
         with shelve.open(self._url) as db:
@@ -14,7 +18,7 @@ class PlayerRepository(object):
 
     def create(self, name):
         with shelve.open(self._url) as db:
-            db[name] = 1000
+            db[name] = self._start_rank
 
     def score(self, name):
         with shelve.open(self._url) as db:

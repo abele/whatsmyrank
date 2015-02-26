@@ -7,14 +7,14 @@ from wsgiref.simple_server import make_server
 import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
 from pyramid.response import Response
-from whatsmyrank.players import PlayerRepository
+from whatsmyrank.players import PlayerRepository, START_RANK
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.environ['QUEST_DATABASE_URL']
 
-player_repo = PlayerRepository(DATABASE_URL)
+player_repo = PlayerRepository(DATABASE_URL, START_RANK)
 
 
 def home(request):
