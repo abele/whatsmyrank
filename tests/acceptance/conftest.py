@@ -21,9 +21,14 @@ def database_url():
 
 @pytest.fixture(scope='session')
 def test_server(xprocess, request, database_url):
+    port = 8081
+
     def preparefunc(cwd):
         server_mod = py.path.local('src/whatsmyrank/web.py')
+
         os.environ['RANK_DATABASE_URL'] = database_url
+        os.environ['PORT'] = str(port)
+
         return ('started', [sys.executable, server_mod, ])
 
     pid, log = xprocess.ensure('server', preparefunc)
@@ -34,7 +39,7 @@ def test_server(xprocess, request, database_url):
     request.addfinalizer(fin)
 
     def get_url(url):
-        return 'http://localhost:8080{}'.format(url)
+        return 'http://localhost:{}{}'.format(port, url)
 
     return get_url
 
