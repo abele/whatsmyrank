@@ -7,34 +7,12 @@ from wsgiref.simple_server import make_server
 import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
 from pyramid.response import Response
+from whatsmyrank.players import PlayerRepository
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.environ['QUEST_DATABASE_URL']
-
-class PlayerRepository(object):
-    def __init__(self, database_url):
-        self._url = database_url
-
-    def scores(self):
-        with shelve.open(self._url) as db:
-            _scores = [key.upper() + ' ' + str(db[key]) + '\n'
-                       for key in db]
-
-        return _scores
-
-    def create(self, name):
-        with shelve.open(self._url) as db:
-            db[name] = 1000
-
-    def score(self, name):
-        with shelve.open(DATABASE_URL) as db:
-            player_score = name.upper() + ' ' + str(db[name])
-
-        return player_score
-
-
 
 player_repo = PlayerRepository(DATABASE_URL)
 
