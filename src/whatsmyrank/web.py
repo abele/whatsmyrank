@@ -62,6 +62,12 @@ def add_games(request):
     player1 = request.POST['player1']
     player2 = request.POST['player2']
     games = request.POST['games']
+    for game in games.split():
+        p1, p2 = map(int, game.split('/'))
+        player = player1 if p1 > p2 else player2
+        player_repo.add_win(player, 1)
+        print(player, p1, p2)
+
     return Response('DONE')
 
 

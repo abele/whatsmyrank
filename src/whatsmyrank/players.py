@@ -25,3 +25,12 @@ class PlayerRepository(object):
             player_score = name.upper() + ' ' + str(db[name])
 
         return player_score
+
+    def add_win(self, name, count):
+        with shelve.open(self._url) as db:
+            if name not in db:
+                db[name] = self._start_rank + count
+            else:
+                db[name] += count
+
+            print(name, db[name])
