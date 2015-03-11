@@ -82,7 +82,7 @@ config.add_view(create_player, route_name='players', request_method='POST')
 config.add_route('player', '/players/{player}')
 config.add_view(view_player, route_name='player')
 
-config.add_route('games', '/games')
+config.add_route('games', '/')
 config.add_view(games, route_name='games', request_method='GET')
 config.add_view(add_games, route_name='games', request_method='POST')
 

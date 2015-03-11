@@ -30,7 +30,7 @@ def test_can_add_game_scores(app):
     app.visit('/players')
     app.add_player('p1')
 
-    app.visit('/games')
+    app.visit('/')
     app.enter_games('p1', 'p2', '11/2 11/3 11/8')
     app.visit('/players/p1')
     app.shows('P1 1003')
