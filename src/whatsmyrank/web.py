@@ -48,10 +48,21 @@ def view_player(request):
 def games(request):
     content = """
     <form action="" method="POST">
+        <div>
+        <label for="player1">Player 1</label>
         <input id="player1" type="text" name="player1">
+        </div>
+        <div>
+        <label for="player2">Player 2</label>
         <input id="player2" type="text" name="player2">
-        <input id="games" type="text" name="games">
+        </div>
+        <div>
+        <label for="games">Games</label>
+        <textarea id="games" name="games" rows="3"></textarea>
+        </div>
+        <div>
         <input id="submit" type="submit" value="Submit">
+        </div>
     </form>
     """
 
