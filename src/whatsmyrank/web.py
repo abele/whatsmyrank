@@ -17,7 +17,7 @@ DATABASE_URL = os.environ['RANK_DATABASE_URL']
 player_repo = PlayerRepository(DATABASE_URL, START_RANK)
 
 
-def home(request):
+def ranks(request):
     score_list = player_repo.scores()
     return Response(str(score_list))
 
@@ -72,8 +72,8 @@ def add_games(request):
 
 
 config = Configurator()
-config.add_route('home', '/')
-config.add_view(home, route_name='home')
+config.add_route('ranks', 'ranks')
+config.add_view(ranks, route_name='ranks')
 
 config.add_route('players', '/players')
 config.add_view(players, route_name='players', request_method='GET')

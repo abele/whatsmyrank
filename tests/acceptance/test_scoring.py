@@ -15,7 +15,7 @@ def test_shows_player_rating(app, database_url):
     player_repo = PlayerRepository(database_url, START_RANK)
     player_repo.create('p1')
 
-    app.visit('/')
+    app.visit('/ranks')
     app.shows('P1 1000')
 
 
