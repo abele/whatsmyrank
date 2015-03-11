@@ -32,6 +32,7 @@ def test_can_add_game_scores(app):
 
     app.visit('/')
     app.enter_games('p1', 'p2', '11/2 11/3 11/8')
+    app.is_in_page('/ranks')
     app.visit('/players/p1')
     app.shows('P1 1003')
 

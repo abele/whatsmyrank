@@ -79,7 +79,7 @@ def add_games(request):
         player_repo.add_win(player, 1)
         print(player, p1, p2)
 
-    return Response('DONE')
+    raise exc.HTTPFound(request.route_url('ranks'))
 
 
 config = Configurator()
