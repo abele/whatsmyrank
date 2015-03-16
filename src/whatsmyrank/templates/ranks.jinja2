@@ -1,0 +1,9 @@
+<html>
+  <body>
+    <ol>
+      {% for player, score in score_list -%}
+        <li>{{ player|upper }} {{ score }}</li>
+      {% endfor -%}
+    </ol>
+  </body>
+</html>

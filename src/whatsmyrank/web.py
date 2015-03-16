@@ -6,8 +6,11 @@ from wsgiref.simple_server import make_server
 
 import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
+from pyramid.renderers import render_to_response
 from pyramid.response import Response
-from whatsmyrank.players import PlayerRepository, START_RANK
+
+from whatsmyrank.players import START_RANK
+from whatsmyrank.players import PlayerRepository
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,8 +22,11 @@ player_repo = PlayerRepository(DATABASE_URL, START_RANK)
 
 def ranks(request):
     score_list = player_repo.scores()
-    content = '<br>'.join(key.upper() + ' ' + str(value) for key, value in score_list)
-    return Response(content)
+    return render_to_response(
+        'ranks.jinja2', 
+        {'score_list': score_list}, 
+        request,
+    )
 
 
 def players(request):
@@ -98,6 +104,8 @@ config.add_route('games', '/')
 config.add_view(games, route_name='games', request_method='GET')
 config.add_view(add_games, route_name='games', request_method='POST')
 
+config.include('pyramid_jinja2')
+config.add_jinja2_search_path('whatsmyrank:templates')
 
 app = config.make_wsgi_app()
 
