@@ -19,7 +19,8 @@ player_repo = PlayerRepository(DATABASE_URL, START_RANK)
 
 def ranks(request):
     score_list = player_repo.scores()
-    return Response(str(score_list))
+    content = '<br>'.join(key.upper() + ' ' + str(value) for key, value in score_list)
+    return Response(content)
 
 
 def players(request):

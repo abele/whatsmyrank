@@ -1,6 +1,6 @@
 import os
 import shelve
-
+from operator import itemgetter
 
 START_RANK = 1000
 
@@ -12,9 +12,9 @@ class PlayerRepository(object):
 
     def scores(self):
         with shelve.open(self._url) as db:
-            _scores = [key.upper() + ' ' + str(db[key]) + '\n' for key in db]
+            _scores = [(key, db[key]) for key in db]
 
-        return _scores
+        return sorted(_scores, key=itemgetter(1), reverse=True)
 
     def create(self, name):
         with shelve.open(self._url) as db:
