@@ -47,4 +47,9 @@ setup(
         'py==1.4.26',
         'pyramid_jinja2==2.3.3',
     ],
+    entry_points={
+        'console_scripts': [
+            'whatsmyrank = whatsmyrank.runner:main'
+        ]
+    }
 )

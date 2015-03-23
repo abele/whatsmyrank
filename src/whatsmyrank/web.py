@@ -1,4 +1,3 @@
-import logging
 import os
 import shelve
 import sys
@@ -11,9 +10,6 @@ from pyramid.response import Response
 
 from whatsmyrank.players import START_RANK
 from whatsmyrank.players import PlayerRepository
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.environ['RANK_DATABASE_URL']
 
@@ -108,15 +104,3 @@ config.include('pyramid_jinja2')
 config.add_jinja2_search_path('whatsmyrank:templates')
 
 app = config.make_wsgi_app()
-
-
-if __name__ == '__main__':
-    logger.info('ENVIRONMENT=%s',
-                {key: os.environ[key] for key in os.environ
-                 if key.startswith('RANK_')})
-    port = int(os.environ.get('PORT', 8080))
-    sys.stderr.write("started\n")
-    sys.stderr.flush()
-
-    server = make_server('127.0.0.1', port, app)
-    server.serve_forever()
