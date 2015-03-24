@@ -24,12 +24,10 @@ def test_server(xprocess, request, database_url):
     port = 8081
 
     def preparefunc(cwd):
-        server_mod = py.path.local('src/whatsmyrank/web.py')
-
         os.environ['RANK_DATABASE_URL'] = database_url
         os.environ['PORT'] = str(port)
 
-        return ('started', [sys.executable, server_mod, ])
+        return ('started', ['whatsmyrank'])
 
     pid, log = xprocess.ensure('server', preparefunc)
 
