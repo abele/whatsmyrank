@@ -27,7 +27,7 @@ def test_server(xprocess, request, database_url):
         os.environ['RANK_DATABASE_URL'] = database_url
         os.environ['PORT'] = str(port)
 
-        return ('started', ['whatsmyrank'])
+        return ('started', ['wmr'])
 
     pid, log = xprocess.ensure('server', preparefunc)
 

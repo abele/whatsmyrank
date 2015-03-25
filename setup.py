@@ -49,7 +49,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'whatsmyrank = whatsmyrank.runner:main'
+            'whatsmyrank = wmr.runner:main',
+            'wmr = wmr.runner:main',
         ]
     }
 )

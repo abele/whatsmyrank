@@ -8,9 +8,9 @@ from pyramid.config import Configurator
 from pyramid.renderers import render_to_response
 from pyramid.response import Response
 
-from whatsmyrank.players import START_RANK
-from whatsmyrank.players import PlayerRepository
-from whatsmyrank.tournament import TournamentRepository
+from wmr.players import START_RANK
+from wmr.players import PlayerRepository
+from wmr.tournament import TournamentRepository
 
 DATABASE_URL = os.environ['RANK_DATABASE_URL']
 
@@ -168,6 +168,6 @@ config.add_view(add_tournament_score, route_name='tournament',
         request_method='POST')
 
 config.include('pyramid_jinja2')
-config.add_jinja2_search_path('whatsmyrank:templates')
+config.add_jinja2_search_path('wmr:templates')
 
 app = config.make_wsgi_app()

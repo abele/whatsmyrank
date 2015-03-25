@@ -2,8 +2,8 @@ import shelve
 
 import pytest
 
-from whatsmyrank.players import START_RANK
-from whatsmyrank.players import PlayerRepository
+from wmr.players import START_RANK
+from wmr.players import PlayerRepository
 
 
 @pytest.fixture
