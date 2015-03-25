@@ -18,7 +18,10 @@ class PlayerRepository(object):
 
     def create(self, name):
         with shelve.open(self._url) as db:
-            db[name] = self._start_rank
+            if name not in db:
+                db[name] = self._start_rank
+            else:
+                pass
 
     def score(self, name):
         with shelve.open(self._url) as db:
@@ -32,5 +35,3 @@ class PlayerRepository(object):
                 db[name] = self._start_rank + count
             else:
                 db[name] += count
-
-            print(name, db[name])

@@ -36,6 +36,13 @@ def test_can_add_game_scores(app):
     app.visit('/players/p1')
     app.shows('P1 1003')
 
+def test_can_create_tournaments(app):
+    app.visit('/tournaments')
+    app.add_tournament('First Tournament')
+
+    app.enter_games('p1', 'p2', '11/2 11/3 11/8')
+    app.shows('P1 1003')
+
 
 class ScoringApp(object):
     def __init__(self, browser, get_url):
@@ -60,3 +67,8 @@ class ScoringApp(object):
         self._browser.fill('player2', p2)
         self._browser.fill('games', game_seq_str)
         self._browser.find_by_id('submit').click()
+
+    def add_tournament(self, name):
+        self._browser.fill('name', name)
+        self._browser.find_by_id('submit').click()
+
