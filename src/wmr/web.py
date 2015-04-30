@@ -62,19 +62,7 @@ def add_games(request):
 
 
 def tournaments(request):
-    content = """
-    <form action="" method="POST">
-        <div>
-        <label for="name">Tournament Name</label>
-        <input id="name" type="text" name="name">
-        </div>
-        <div>
-        <input id="submit" type="submit" value="Submit">
-        </div>
-    </form>
-    """
-
-    return Response(content)
+    return render_to_response('tournament_form.jinja2', {}, request)
 
 
 def add_tournament(request):
