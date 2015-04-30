@@ -36,6 +36,7 @@ def test_can_add_game_scores(app):
     app.visit('/players/p1')
     app.shows('P1 1003')
 
+
 def test_can_create_tournaments(app):
     app.visit('/tournaments')
     app.add_tournament('First Tournament')

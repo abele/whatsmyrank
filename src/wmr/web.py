@@ -14,32 +14,12 @@ from wmr.tournament import TournamentRepository
 
 DATABASE_URL = os.environ['RANK_DATABASE_URL']
 
-player_repo = PlayerRepository(DATABASE_URL, START_RANK)
-tournament_repo = TournamentRepository(DATABASE_URL)
-
-GAME_FORM_HTML = """
-<form action="" method="POST">
-    <div>
-    <label for="player1">Player 1</label>
-    <input id="player1" type="text" name="player1">
-    </div>
-    <div>
-    <label for="player2">Player 2</label>
-    <input id="player2" type="text" name="player2">
-    </div>
-    <div>
-    <label for="games">Games</label>
-    <textarea id="games" name="games" rows="3"></textarea>
-    </div>
-    <div>
-    <input id="submit" type="submit" value="Submit">
-    </div>
-</form>
-"""
+PLAYER_REPO = PlayerRepository(DATABASE_URL, START_RANK)
+TOURNAMENT_REPO = TournamentRepository(DATABASE_URL)
 
 
 def ranks(request):
-    score_list = player_repo.scores()
+    score_list = PLAYER_REPO.scores()
     return render_to_response(
         'ranks.jinja2',
         {'score_list': score_list},
@@ -55,24 +35,23 @@ def players(request):
     </form>
     """
 
-    return Response(content) 
+    return Response(content)
 
 
 def create_player(request):
     name = request.POST['player-name']
-    player_repo.create(name)
+    PLAYER_REPO.create(name)
     raise exc.HTTPFound(request.route_url('player', player=name))
 
 
 def view_player(request):
     name = request.matchdict['player']
-    player_score = player_repo.score(name)
+    player_score = PLAYER_REPO.score(name)
     return Response(player_score)
 
 
 def games(request):
-    content = GAME_FORM_HTML
-    return Response(content)
+    return render_to_response('game_form.jinja2', {}, request)
 
 
 def add_games(request):
@@ -82,9 +61,9 @@ def add_games(request):
     for game in games.split():
         p1, p2 = map(int, game.split('/'))
         winner = player1 if p1 > p2 else player2
-        player_repo.create(player1)
-        player_repo.create(player2)
-        player_repo.add_win(winner, 1)
+        PLAYER_REPO.create(player1)
+        PLAYER_REPO.create(player2)
+        PLAYER_REPO.add_win(winner, 1)
 
     raise exc.HTTPFound(request.route_url('ranks'))
 
@@ -107,22 +86,23 @@ def tournaments(request):
 
 def add_tournament(request):
     name = request.POST['name']
-    pk = tournament_repo.add(name)
+    pk = TOURNAMENT_REPO.add(name)
     raise exc.HTTPFound(request.route_url('tournament', pk=pk))
 
 
 def view_tournament(request):
     pk = request.matchdict['pk']
-    tour = tournament_repo.get(pk)
-    print(tour)
-    content = ('<div>' + tour['name'] + '</div><div>' + GAME_FORM_HTML +
-    '</div><ol>')
-    for player_pk in tour['player_list']:
-        player_score = player_repo.score(player_pk)
-        content += '<li>' + player_score + '</li>'
-
-    content += '</ol>'
-    return Response(content)
+    tour = TOURNAMENT_REPO.get(pk)
+    context = {
+        'name': tour['name'],
+        'player_score_seq': (PLAYER_REPO.score(pk)
+                             for pk in tour['player_list'])
+    }
+    return render_to_response(
+        'tournament.jinja2',
+        context,
+        request
+    )
 
 def add_tournament_score(request):
     pk = request.matchdict['pk']
@@ -133,11 +113,11 @@ def add_tournament_score(request):
     for game in games.split():
         p1, p2 = map(int, game.split('/'))
         winner = player1 if p1 > p2 else player2
-        player_repo.create(player1)
-        player_repo.create(player2)
-        player_repo.add_win(winner, 1)
+        PLAYER_REPO.create(player1)
+        PLAYER_REPO.create(player2)
+        PLAYER_REPO.add_win(winner, 1)
 
-    tournament_repo.add_player(pk, [player1, player2])
+    TOURNAMENT_REPO.add_player(pk, [player1, player2])
     raise exc.HTTPFound(request.route_url('tournament', pk=pk))
 
 
