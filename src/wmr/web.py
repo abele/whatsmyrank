@@ -28,14 +28,7 @@ def ranks(request):
 
 
 def players(request):
-    content = """
-    <form action="" method="POST">
-        <input id="player-name" type="text" name="player-name">
-        <input id="submit" type="submit" value="Create">
-    </form>
-    """
-
-    return Response(content)
+    return render_to_response('players.jinja2', {}, request)
 
 
 def create_player(request):
