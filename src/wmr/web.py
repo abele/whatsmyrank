@@ -16,15 +16,6 @@ PLAYER_REPO = inject.instance(PlayerRepository)
 TOURNAMENT_REPO = inject.instance(TournamentRepository)
 
 
-def ranks(request):
-    score_list = PLAYER_REPO.scores()
-    return render_to_response(
-        'ranks.jinja2',
-        {'score_list': score_list},
-        request,
-    )
-
-
 def players(request):
     return render_to_response('players.jinja2', {}, request)
 
@@ -103,8 +94,8 @@ def add_tournament_score(request):
 
 def make_wsgi_app():
     config = Configurator()
-    config.add_route('ranks', 'ranks')
-    config.add_view(ranks, route_name='ranks')
+    config.add_route('ranks', '/ranks')
+    config.add_view('wmr.ranks.list_ranks', route_name='ranks')
 
     config.add_route('players', '/players')
     config.add_view(players, route_name='players', request_method='GET')
