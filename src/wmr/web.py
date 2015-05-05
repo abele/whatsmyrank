@@ -101,32 +101,32 @@ def add_tournament_score(request):
 
 
 
+def make_wsgi_app():
+    config = Configurator()
+    config.add_route('ranks', 'ranks')
+    config.add_view(ranks, route_name='ranks')
 
-config = Configurator()
-config.add_route('ranks', 'ranks')
-config.add_view(ranks, route_name='ranks')
+    config.add_route('players', '/players')
+    config.add_view(players, route_name='players', request_method='GET')
+    config.add_view(create_player, route_name='players', request_method='POST')
 
-config.add_route('players', '/players')
-config.add_view(players, route_name='players', request_method='GET')
-config.add_view(create_player, route_name='players', request_method='POST')
+    config.add_route('player', '/players/{player}')
+    config.add_view(view_player, route_name='player')
 
-config.add_route('player', '/players/{player}')
-config.add_view(view_player, route_name='player')
+    config.add_route('games', '/')
+    config.add_view(games, route_name='games', request_method='GET')
+    config.add_view(add_games, route_name='games', request_method='POST')
 
-config.add_route('games', '/')
-config.add_view(games, route_name='games', request_method='GET')
-config.add_view(add_games, route_name='games', request_method='POST')
+    config.add_route('tournaments', '/tournaments')
+    config.add_view(tournaments, route_name='tournaments', request_method='GET')
+    config.add_view(add_tournament, route_name='tournaments', request_method='POST')
+    config.add_route('tournament', '/tournaments/{pk}')
+    config.add_view(view_tournament, route_name='tournament', request_method='GET')
 
-config.add_route('tournaments', '/tournaments')
-config.add_view(tournaments, route_name='tournaments', request_method='GET')
-config.add_view(add_tournament, route_name='tournaments', request_method='POST')
-config.add_route('tournament', '/tournaments/{pk}')
-config.add_view(view_tournament, route_name='tournament', request_method='GET')
+    config.add_view(add_tournament_score, route_name='tournament',
+            request_method='POST')
 
-config.add_view(add_tournament_score, route_name='tournament',
-        request_method='POST')
+    config.include('pyramid_jinja2')
+    config.add_jinja2_search_path('wmr:templates')
 
-config.include('pyramid_jinja2')
-config.add_jinja2_search_path('wmr:templates')
-
-app = config.make_wsgi_app()
+    return config.make_wsgi_app()

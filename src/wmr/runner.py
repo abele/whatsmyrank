@@ -3,7 +3,7 @@ import os
 import sys
 from wsgiref.simple_server import make_server
 
-from .web import app
+from .web import make_wsgi_app
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def main():
     sys.stderr.write("started\n")
     sys.stderr.flush()
 
-    server = make_server('127.0.0.1', port, app)
+    server = make_server('127.0.0.1', port, make_wsgi_app())
     server.serve_forever()
 
 
