@@ -1,8 +1,11 @@
 import shelve
 import uuid
 
+import inject
+
 
 class TournamentRepository(object):
+    @inject.params(database_url='database_url')
     def __init__(self, database_url):
         self._url = database_url
 

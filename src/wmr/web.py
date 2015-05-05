@@ -8,14 +8,12 @@ from pyramid.config import Configurator
 from pyramid.renderers import render_to_response
 from pyramid.response import Response
 
-from wmr.players import START_RANK
+from wmr.config import inject
 from wmr.players import PlayerRepository
 from wmr.tournament import TournamentRepository
 
-DATABASE_URL = os.environ['RANK_DATABASE_URL']
-
-PLAYER_REPO = PlayerRepository(DATABASE_URL, START_RANK)
-TOURNAMENT_REPO = TournamentRepository(DATABASE_URL)
+PLAYER_REPO = inject.instance(PlayerRepository)
+TOURNAMENT_REPO = inject.inject(TournamentRepository)
 
 
 def ranks(request):

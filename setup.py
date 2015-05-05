@@ -47,6 +47,7 @@ setup(
         'pyramid==1.5.2',
         'py==1.4.26',
         'pyramid_jinja2==2.3.3',
+        'inject==3.3.1',
     ],
     entry_points={
         'console_scripts': [

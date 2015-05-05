@@ -2,10 +2,13 @@ import os
 import shelve
 from operator import itemgetter
 
+import inject
+
 START_RANK = 1000
 
 
 class PlayerRepository(object):
+    @inject.params(database_url='database_url', start_rank='start_rank')
     def __init__(self, database_url, start_rank):
         self._url = database_url
         self._start_rank = start_rank
