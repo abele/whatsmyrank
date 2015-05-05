@@ -13,7 +13,7 @@ from wmr.players import PlayerRepository
 from wmr.tournament import TournamentRepository
 
 PLAYER_REPO = inject.instance(PlayerRepository)
-TOURNAMENT_REPO = inject.inject(TournamentRepository)
+TOURNAMENT_REPO = inject.instance(TournamentRepository)
 
 
 def ranks(request):
