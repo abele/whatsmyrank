@@ -7,6 +7,8 @@ pytest
 pytest-xprocess
 splinter
 
+pytest-ipdb==0.1.dev2
+
 # For exploration
 matplotlib
 pandas
