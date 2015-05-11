@@ -1,4 +1,5 @@
 import shelve
+import time
 
 import pytest
 
@@ -7,13 +8,15 @@ from wmr.players import PlayerRepository
 
 
 @pytest.fixture
-def app(browser, test_server):
-    return ScoringApp(browser, test_server)
+def app(browser, server):
+    return ScoringApp(browser, server)
 
 
 def test_shows_player_rating(app, database_url):
     player_repo = PlayerRepository(database_url, START_RANK)
     player_repo.create('p1')
+    # XXX: white a seconds before server catches up
+    time.sleep(1)
 
     app.visit('/ranks')
     app.shows('P1 1000')
@@ -72,4 +75,3 @@ class ScoringApp(object):
     def add_tournament(self, name):
         self._browser.fill('name', name)
         self._browser.find_by_id('submit').click()
-

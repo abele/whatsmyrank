@@ -14,34 +14,28 @@ def clear_database(database_url):
         db.clear()
 
 
-@pytest.fixture(scope='function')
-def database_url(monkeypatch):
-    url = str(py.path.local('test.shelve'))
-    monkeypatch.setitem(os.environ, 'RANK_DATABASE_URL', url)
+@pytest.fixture(scope='session', autouse=True)
+def setup_test_environment(database_url, server_port):
+    """Pass test environment to application configuration."""
+    os.environ['RANK_DATABASE_URL'] = database_url
+    os.environ['PORT'] = str(server_port)
+
+
+@pytest.fixture(scope='session')
+def database_url():
     return str(py.path.local('test.shelve'))
 
 
 @pytest.fixture(scope='session')
-def test_server(xprocess, request, database_url):
-    port = 8081
+def server_port():
+    return 8081
 
-    def preparefunc(cwd):
-        os.environ['RANK_DATABASE_URL'] = database_url
-        os.environ['PORT'] = str(port)
 
-        return ('started', ['wmr'])
-
-    pid, log = xprocess.ensure('server', preparefunc)
-
-    def fin():
-        os.kill(pid, signal.SIGKILL)
-
-    request.addfinalizer(fin)
-
-    def get_url(url):
-        return 'http://localhost:{}{}'.format(port, url)
-
-    return get_url
+@pytest.fixture(scope='session')
+def server(xprocess, request, database_url, server_port):
+    pid, log = xprocess.ensure('server', lambda cwd: ('started', ['wmr']))
+    request.addfinalizer(lambda: os.kill(pid, signal.SIGKILL))
+    return lambda url: 'http://localhost:{}{}'.format(server_port, url)
 
 
 @pytest.fixture(scope='module')
