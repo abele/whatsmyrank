@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+main () {
+  python_files=$(git diff HEAD^ HEAD --name-only --diff-filter=ACM | grep -e '\.py$')
+
+  if [ -n "$python_files" ]; then
+    source venv/bin/activate
+    echo " * AUTOPEP8"
+
+    for f in $python_files; do
+      autopep8 --in-place "$f"
+    done
+  fi
+}
+
+main

@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+main {
+  exit_code=0
+  python_files=$(git diff --cached --name-status | grep -v ^D | awk '$1 $2 { print $2}' | grep -e .py$)
+  javascript_files=$(git diff --cached --name-status | grep -v ^D | awk '$1 $2 { print $2}' | grep -e .js$)
+
+  if [ -n "$javascript_files" ]; then
+    source venv/bin/activate
+    echo " * JSHINT"
+    jshint $javascript_files || exit_code=$?
+  fi
+
+  if [ -n "$python_files" ]; then
+    source venv/bin/activate
+    echo " * FLAKE8"
+    flake8 $python_files
+    echo " * JSHINT"
+    jshint $javascript_files || exit_code=$?
+    echo " * RUNNING TESTS"
+    inv tests || exit_code=$?
+  fi
+
+  exit $exit_code
+}
+
+main

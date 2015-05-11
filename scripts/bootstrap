@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Simple script description.
+#
+# Example usage:
+#   $ bootstrap
+
+set -e
+
+main() {
+  ln -sf hooks/pre-commit .git/hooks/pre-commit
+  ln -sf hooks/post-commit .git/hooks/post-commit
+}
+
+main
