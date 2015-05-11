@@ -14,8 +14,10 @@ def clear_database(database_url):
         db.clear()
 
 
-@pytest.fixture(scope='session')
-def database_url():
+@pytest.fixture(scope='function')
+def database_url(monkeypatch):
+    url = str(py.path.local('test.shelve'))
+    monkeypatch.setitem(os.environ, 'RANK_DATABASE_URL', url)
     return str(py.path.local('test.shelve'))
 
 

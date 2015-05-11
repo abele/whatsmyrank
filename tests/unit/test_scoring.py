@@ -1,5 +1,5 @@
-from whatsmyrank.players import START_RANK
-from whatsmyrank.players import PlayerRepository
+from wmr.players import START_RANK
+from wmr.players import PlayerRepository
 
 
 def test_default_starting_rank_is_1000():
@@ -11,7 +11,7 @@ def test_all_players_start_with_starting_rank(database_url):
     player_name = 'some-player'
     player_repo = PlayerRepository(database_url, START_RANK)
     player_repo.create(player_name)
-    assert player_repo.score(player_name) == 'SOME-PLAYER 1000' 
+    assert player_repo.score(player_name) == 'SOME-PLAYER 1000'
 
 
 def test_returns_ranks_sorted_descending(database_url):
