@@ -7,6 +7,8 @@ import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
 from pyramid.renderers import render_to_response
 from pyramid.response import Response
+from pyramid.view import view_defaults
+from pyramid.view import view_config
 
 from wmr.config import inject
 from wmr.players import PlayerRepository
@@ -16,22 +18,26 @@ PLAYER_REPO = inject.instance(PlayerRepository)
 TOURNAMENT_REPO = inject.instance(TournamentRepository)
 
 
-def players(request):
-    return render_to_response('players.jinja2', {}, request)
+@view_defaults(route_name='players')
+class Players(object):
+    def __init__(self, request):
+        self.request = request
 
+    def get(self):
+        return {}
 
-def create_player(request):
-    name = request.POST['player-name']
-    PLAYER_REPO.create(name)
-    raise exc.HTTPFound(request.route_url('player', player=name))
+    def post(self):
+        name = self.request.POST['player-name']
+        PLAYER_REPO.create(name)
+        raise exc.HTTPFound(self.request.route_url('player', player=name))
 
+    def view_player(self):
+        name = self.request.matchdict['player']
+        player_score = PLAYER_REPO.score(name)
+        # XXX: return dict and render onto template
+        return Response(player_score)
 
-def view_player(request):
-    name = request.matchdict['player']
-    player_score = PLAYER_REPO.score(name)
-    return Response(player_score)
-
-
+# XXX: move games to new class based view
 def games(request):
     return render_to_response('game_form.jinja2', {}, request)
 
@@ -54,6 +60,8 @@ def tournaments(request):
     return render_to_response('tournament_form.jinja2', {}, request)
 
 
+
+# XXX: Move tournaments to separate class based views
 def add_tournament(request):
     name = request.POST['name']
     pk = TOURNAMENT_REPO.add(name)
@@ -98,11 +106,16 @@ def make_wsgi_app():
     config.add_view('wmr.ranks.list_ranks', route_name='ranks')
 
     config.add_route('players', '/players')
-    config.add_view(players, route_name='players', request_method='GET')
-    config.add_view(create_player, route_name='players', request_method='POST')
-
+    config.add_view(Players, attr='get', request_method='GET', renderer='players.jinja2')
+    config.add_view(Players, attr='post', request_method='POST')
     config.add_route('player', '/players/{player}')
-    config.add_view(view_player, route_name='player')
+    # XXX: how to format long lines?
+    config.add_view(
+        Players,
+        attr='view_player',
+        route_name='player',
+        request_method='GET',
+    )
 
     config.add_route('games', '/')
     config.add_view(games, route_name='games', request_method='GET')
