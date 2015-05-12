@@ -7,8 +7,8 @@ import pyramid.httpexceptions as exc
 from pyramid.config import Configurator
 from pyramid.renderers import render_to_response
 from pyramid.response import Response
-from pyramid.view import view_defaults
 from pyramid.view import view_config
+from pyramid.view import view_defaults
 
 from wmr.config import inject
 from wmr.players import PlayerRepository
