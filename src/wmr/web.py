@@ -17,6 +17,16 @@ from wmr.tournament import TournamentRepository
 PLAYER_REPO = inject.instance(PlayerRepository)
 TOURNAMENT_REPO = inject.instance(TournamentRepository)
 
+"""
+XXX: we should have three domains
+- core domain (basic elements)
+- application domain (how we do things)
+- framework domain (Pyramids views)
+
+How one view knows about other view? Because they are in one application domain
+tied together for specific purpose.
+"""
+
 
 @view_defaults(route_name='players')
 class Players(object):
@@ -37,28 +47,32 @@ class Players(object):
         # XXX: return dict and render onto template
         return Response(player_score)
 
-# XXX: move games to new class based view
-def games(request):
-    return render_to_response('game_form.jinja2', {}, request)
 
+@view_defaults(route_name='games')
+class Games(object):
+    def __init__(self, request):
+        self.request = request
 
-def add_games(request):
-    player1 = request.POST['player1']
-    player2 = request.POST['player2']
-    games = request.POST['games']
-    for game in games.split():
-        p1, p2 = map(int, game.split('/'))
-        winner = player1 if p1 > p2 else player2
-        PLAYER_REPO.create(player1)
-        PLAYER_REPO.create(player2)
-        PLAYER_REPO.add_win(winner, 1)
+    def get(self):
+        return render_to_response('game_form.jinja2', {}, self.request)
 
-    raise exc.HTTPFound(request.route_url('ranks'))
+    def post(self):
+        player1 = self.request.POST['player1']
+        player2 = self.request.POST['player2']
+        games = self.request.POST['games']
+
+        for game in games.split():
+            p1, p2 = map(int, game.split('/'))
+            winner = player1 if p1 > p2 else player2
+            PLAYER_REPO.create(player1)
+            PLAYER_REPO.create(player2)
+            PLAYER_REPO.add_win(winner, 1)
+
+        raise exc.HTTPFound(self.request.route_url('ranks'))
 
 
 def tournaments(request):
     return render_to_response('tournament_form.jinja2', {}, request)
-
 
 
 # XXX: Move tournaments to separate class based views
@@ -118,8 +132,8 @@ def make_wsgi_app():
     )
 
     config.add_route('games', '/')
-    config.add_view(games, route_name='games', request_method='GET')
-    config.add_view(add_games, route_name='games', request_method='POST')
+    config.add_view(Games, attr='get', request_method='GET')
+    config.add_view(Games, attr='post', request_method='POST')
 
     config.add_route('tournaments', '/tournaments')
     config.add_view(tournaments, route_name='tournaments', request_method='GET')
