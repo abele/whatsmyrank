@@ -7,7 +7,7 @@ pytest
 pytest-xprocess
 splinter
 
-pytest-ipdb==0.1.dev2
+pdbpp==0.8.2
 
 # For exploration
 matplotlib
